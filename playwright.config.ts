@@ -14,9 +14,9 @@ export default defineConfig({
     globalSetup: './globalSetup',
     testDir: './tests',
     /* Run tests in files in parallel */
-    fullyParallel: false,
-    workers: 3,
-    maxFailures: 10,
+    fullyParallel: true,
+    workers: process.env.CI ? 3 : 5,
+    maxFailures: process.env.CI ? 10 : undefined,
     /* Fail the build on CI if you accidentally left test.only in the source code. */
     forbidOnly: !!process.env.CI,
     /* Retry on CI only */
