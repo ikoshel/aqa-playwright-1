@@ -1,14 +1,20 @@
 import {expect, Page} from "@playwright/test";
+import {BasePage} from "../BasePage";
 
-export class LoginPage {
-    private readonly page: Page;
+export class LoginPage extends BasePage {
 
     constructor(page: Page) {
-        this.page = page;
+        super(page);
     }
 
-    public async navigateTo(sting: string) {
-        await this.page.goto(sting);
+    public async signIn(email: string, password: string, rememberMe: boolean = true) {
+        await this.clickSignInButton();
+        await this.fillEmail(email);
+        await this.fillPassword(password);
+        if (rememberMe) {
+            await this.clickRememberMeCheckbox()
+        }
+        await this.clickLoginButton();
     }
 
     public async clickSignInButton() {
