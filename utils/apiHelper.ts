@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+// Get user ID
 async function postApi(url: string, data: object, headers: object) {
     try {
         const response = await axios.post(url, data, headers);
@@ -12,6 +13,7 @@ async function postApi(url: string, data: object, headers: object) {
     }
 }
 
+// Delete user by ID
 async function deleteApi(url: string, headers: object) {
     try {
         await axios.delete(url, headers);
