@@ -21,58 +21,71 @@ import {
     wrongDataLastName,
     wrongDataName
 } from "../../fixtures/registerPageFixtures";
-import {
-    ERROR_MESSAGE_SELECTOR,
-    SIGNUP_EMAIL_SELECTOR,
-    SIGNUP_LAST_NAME_SELECTOR,
-    SIGNUP_NAME_SELECTOR,
-    SIGNUP_PASSWORD_SELECTOR,
-    SIGNUP_REPEAT_PASSWORD_SELECTOR
-} from '../../constants/registerPageSelectors';
 import {deleteApi, postApi} from "../../utils/apiHelper";
 
-export class RegisterPage extends BasePage {
+export class WelcomePage extends BasePage {
+
+    private SIGNUP_NAME_SELECTOR = '#signupName';
+    private SIGNUP_LAST_NAME_SELECTOR = '#signupLastName';
+    private SIGNUP_EMAIL_SELECTOR = '#signupEmail';
+    private SIGNUP_PASSWORD_SELECTOR = '#signupPassword';
+    private SIGNUP_REPEAT_PASSWORD_SELECTOR = '#signupRepeatPassword';
+    private ERROR_MESSAGE_SELECTOR = '.invalid-feedback p';
+
+    private nameInput: Locator;
+    private lastNameInput: Locator;
+    private emailInput: Locator;
+    private passwordInput: Locator;
+    private rePasswordInput: Locator;
+    private readonly errorMessage: Locator;
 
     constructor(page: Page) {
         super(page);
+
+        this.nameInput = this.page.locator(this.SIGNUP_NAME_SELECTOR);
+        this.lastNameInput = this.page.locator(this.SIGNUP_LAST_NAME_SELECTOR);
+        this.emailInput = this.page.locator(this.SIGNUP_EMAIL_SELECTOR);
+        this.passwordInput = this.page.locator(this.SIGNUP_PASSWORD_SELECTOR);
+        this.rePasswordInput = this.page.locator(this.SIGNUP_REPEAT_PASSWORD_SELECTOR);
+        this.errorMessage = this.page.locator(this.ERROR_MESSAGE_SELECTOR)
     }
 
-    public async signUp(name: string, lastName: string, email: string, password: string, rePassword: string) {
-        await this.fillName(name);
-        await this.fillLastName(lastName);
-        await this.fillEmail(email);
-        await this.fillPassword(password);
-        await this.fillRePassword(rePassword);
+    public async fillFormWithValues(name: string, lastName: string, email: string, password: string, rePassword: string) {
+        await this.nameInput.fill(name);
+        await this.lastNameInput.fill(lastName);
+        await this.emailInput.fill(email);
+        await this.passwordInput.fill(password);
+        await this.rePasswordInput.fill(rePassword);
     }
 
     public async signUpWithValidData() {
-        await this.signUp(validName, validLastName, validEmail, validPassword, validPassword);
+        await this.fillFormWithValues(validName, validLastName, validEmail, validPassword, validPassword);
     }
 
     public async signUpWithInvalidData() {
-        await this.signUp(invalidShortName, invalidShortLastName, invalidEmail, invalidPassword, invalidPassword);
+        await this.fillFormWithValues(invalidShortName, invalidShortLastName, invalidEmail, invalidPassword, invalidPassword);
     }
 
     public async signUpWithShortLengthNameAndLastName() {
-        await this.signUp(invalidShortName, invalidShortLastName, validEmail, validPassword, validPassword);
+        await this.fillFormWithValues(invalidShortName, invalidShortLastName, validEmail, validPassword, validPassword);
         await this.validateMassageWhenWrongLengthForNameAndLastName();
     }
 
     public async signUpWithLongLengthNameAndLastName() {
-        await this.signUp(invalidLongName, invalidLongLastName, validEmail, validPassword, validPassword);
+        await this.fillFormWithValues(invalidLongName, invalidLongLastName, validEmail, validPassword, validPassword);
         await this.validateMassageWhenWrongLengthForNameAndLastName();
     }
 
     public async signUpWithWrongDataForNameAndLastNameAndEmail() {
-        await this.signUp(wrongDataName, wrongDataLastName, wrongDataEmail, validPassword, validPassword);
+        await this.fillFormWithValues(wrongDataName, wrongDataLastName, wrongDataEmail, validPassword, validPassword);
     }
 
     public async signUpWithWrongDataForPassword() {
-        await this.signUp(validName, validLastName, validEmail, invalidPassword, invalidPassword);
+        await this.fillFormWithValues(validName, validLastName, validEmail, invalidPassword, invalidPassword);
     }
 
     public async signUpWithDifferencePasswords() {
-        await this.signUp(validName, validLastName, validEmail, validPassword, anotherValidPassword);
+        await this.fillFormWithValues(validName, validLastName, validEmail, validPassword, anotherValidPassword);
     }
 
     public async clickSignUpButton() {
@@ -80,28 +93,7 @@ export class RegisterPage extends BasePage {
     }
 
     public async clickNameInput() {
-        await this.page.locator(SIGNUP_NAME_SELECTOR).click();
-    }
-
-    public async fillName(name: string) {
-        await this.page.locator(SIGNUP_NAME_SELECTOR).fill(name);
-    }
-
-    public async fillLastName(lastName: string) {
-        await this.page.locator(SIGNUP_LAST_NAME_SELECTOR).fill(lastName);
-    }
-
-    public async fillEmail(email: string) {
-        await this.page.locator(SIGNUP_EMAIL_SELECTOR).fill(email);
-    }
-
-    public async fillPassword(password: string) {
-        await this.page.locator(SIGNUP_PASSWORD_SELECTOR).fill(password);
-    }
-
-    public async fillRePassword(rePassword: string) {
-        await
-            this.page.locator(SIGNUP_REPEAT_PASSWORD_SELECTOR).fill(rePassword);
+        await this.nameInput.click();
     }
 
     public async clickRegisterButton() {
@@ -109,15 +101,15 @@ export class RegisterPage extends BasePage {
     }
 
     public async clearAllRegisterFields() {
-        await this.page.locator(SIGNUP_NAME_SELECTOR).clear();
-        await this.page.locator(SIGNUP_LAST_NAME_SELECTOR).clear();
-        await this.page.locator(SIGNUP_EMAIL_SELECTOR).clear();
-        await this.page.locator(SIGNUP_PASSWORD_SELECTOR).clear();
-        await this.page.locator(SIGNUP_REPEAT_PASSWORD_SELECTOR).clear();
+        await this.nameInput.clear();
+        await this.lastNameInput.clear();
+        await this.emailInput.clear();
+        await this.passwordInput.clear();
+        await this.rePasswordInput.clear();
     }
 
     public async validateMassageWhenWrongLengthForNameAndLastName() {
-        const validationMassages: Locator = this.page.locator(ERROR_MESSAGE_SELECTOR);
+        const validationMassages: Locator = this.errorMessage;
         let actualValidationMassages: string[] = [];
         for (const validationMassageItem of await validationMassages.all()) {
             actualValidationMassages.push(await validationMassageItem.innerText())
@@ -126,12 +118,12 @@ export class RegisterPage extends BasePage {
     }
 
     public async validateMassageWhenPasswordsDoNotMatch() {
-        const validationMassageText: string = await this.page.locator(ERROR_MESSAGE_SELECTOR).innerText();
+        const validationMassageText: string = await this.errorMessage.innerText();
         expect(validationMassageText).toBe(expectedErrorMessagesWhenPasswordsDoNotMatch);
     }
 
     public async validateErrorMessagesForNameAndLastNameWrongData() {
-        const validationMassages: Locator = this.page.locator(ERROR_MESSAGE_SELECTOR);
+        const validationMassages: Locator = this.errorMessage;
         let actualValidationMassages: string[] = [];
         for (const validationMassageItem of await validationMassages.all()) {
             actualValidationMassages.push(await validationMassageItem.innerText())
@@ -140,12 +132,12 @@ export class RegisterPage extends BasePage {
     }
 
     public async validateErrorMessagesForPasswordWrongData() {
-        const validationMassageText: string = await this.page.locator(ERROR_MESSAGE_SELECTOR).innerText();
+        const validationMassageText: string = await this.errorMessage.innerText();
         expect(validationMassageText).toBe(expectedErrorMessagesForPasswordWrongData);
     }
 
     public async validateMessagesForEmptyRegisterFields() {
-        const validationMassages: Locator = this.page.locator(ERROR_MESSAGE_SELECTOR);
+        const validationMassages: Locator = this.errorMessage;
         let actualValidationMassages: string[] = [];
         for (const validationMassageItem of await validationMassages.all()) {
             actualValidationMassages.push(await validationMassageItem.innerText())
@@ -154,7 +146,7 @@ export class RegisterPage extends BasePage {
     }
 
     public async validateBorderColorForErrorFields() {
-        const inputsWithRedBorder = this.page.locator(ERROR_MESSAGE_SELECTOR);
+        const inputsWithRedBorder = this.errorMessage;
         const expectedBorderColor: string = 'rgb(220, 53, 69)';
         for (const input of await inputsWithRedBorder.all()) {
             await expect.soft(input).toHaveCSS('border-color', expectedBorderColor);
