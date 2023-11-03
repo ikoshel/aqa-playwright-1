@@ -2,18 +2,18 @@ import {expect, Locator, Page} from "@playwright/test";
 import BaseComponent from "./BaseComponent";
 
 export class BasePage extends BaseComponent {
-    private readonly _url: string;
+    //private readonly _url: string;
     private USER_NAV_DROPDOWN_SELECTOR: string = '#userNavDropdown';
     private LOGOUT_BUTTON_SELECTOR: string = 'nav.user-nav_menu.dropdown-menu button';
 
     private userNavDropdown: Locator;
     private logoutButton: Locator;
 
-    constructor(page: Page, url: string, container: Locator) {
+    constructor(page: Page, private readonly _url: string, container: Locator) {
         const wrapper: Locator = container ?? page.locator('html');
         super(page, wrapper);
 
-        this._url = url;
+        //this._url = url;
         this.userNavDropdown = this._container.locator(this.USER_NAV_DROPDOWN_SELECTOR);
         this.logoutButton = this._container.locator(this.LOGOUT_BUTTON_SELECTOR, {hasText: 'Logout'});
     }
