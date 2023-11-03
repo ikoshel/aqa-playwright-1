@@ -1,7 +1,9 @@
 import {expect, Locator, Page} from "@playwright/test";
 import BaseComponent from "../../BaseComponent";
 import {
-    anotherValidPassword, expectedErrorMessagesEmptyFields, expectedErrorMessagesForPasswordWrongData,
+    anotherValidPassword,
+    expectedErrorMessagesEmptyFields,
+    expectedErrorMessagesForPasswordWrongData,
     expectedErrorMessagesWhenPasswordsDoNotMatch,
     expectedErrorMessagesWrongData,
     expectedValidationMassagesWrongLength,
@@ -24,7 +26,7 @@ export default class RegisterModal extends BaseComponent {
     private SIGNUP_NAME_SELECTOR: string = '#signupName';
     private SIGNUP_LAST_NAME_SELECTOR: string = '#signupLastName';
     private SIGNUP_EMAIL_SELECTOR: string = '#signupEmail';
-    private SIGNUP_PASSWORD_SELECTOR: string  = '#signupPassword';
+    private SIGNUP_PASSWORD_SELECTOR: string = '#signupPassword';
     private SIGNUP_REPEAT_PASSWORD_SELECTOR: string = '#signupRepeatPassword';
     private ERROR_MESSAGE_SELECTOR: string = '.invalid-feedback p';
 
@@ -34,6 +36,7 @@ export default class RegisterModal extends BaseComponent {
     private passwordInput: Locator;
     private rePasswordInput: Locator;
     private readonly errorMessage: Locator;
+
     constructor(page: Page) {
         super(page, page.locator('div.modal-content'));
 
@@ -53,33 +56,33 @@ export default class RegisterModal extends BaseComponent {
         await this.rePasswordInput.fill(rePassword);
     }
 
-    public async signUpWithValidData() {
+    public async fillFormWithValidData() {
         await this.fillFormWithValues(validName, validLastName, validEmail, validPassword, validPassword);
     }
 
-    public async signUpWithInvalidData() {
+    public async fillFormUpWithInvalidData() {
         await this.fillFormWithValues(invalidShortName, invalidShortLastName, invalidEmail, invalidPassword, invalidPassword);
     }
 
-    public async signUpWithShortLengthNameAndLastName() {
+    public async fillFormWithShortLengthNameAndLastName() {
         await this.fillFormWithValues(invalidShortName, invalidShortLastName, validEmail, validPassword, validPassword);
         await this.validateMassageWhenWrongLengthForNameAndLastName();
     }
 
-    public async signUpWithLongLengthNameAndLastName() {
+    public async fillFormWithLongLengthNameAndLastName() {
         await this.fillFormWithValues(invalidLongName, invalidLongLastName, validEmail, validPassword, validPassword);
         await this.validateMassageWhenWrongLengthForNameAndLastName();
     }
 
-    public async signUpWithWrongDataForNameAndLastNameAndEmail() {
+    public async fillFormWithWrongDataForNameAndLastNameAndEmail() {
         await this.fillFormWithValues(wrongDataName, wrongDataLastName, wrongDataEmail, validPassword, validPassword);
     }
 
-    public async signUpWithWrongDataForPassword() {
+    public async fillFormWithWrongDataForPassword() {
         await this.fillFormWithValues(validName, validLastName, validEmail, invalidPassword, invalidPassword);
     }
 
-    public async signUpWithDifferencePasswords() {
+    public async fillFormWithDifferencePasswords() {
         await this.fillFormWithValues(validName, validLastName, validEmail, validPassword, anotherValidPassword);
     }
 
