@@ -9,6 +9,6 @@ setup('authenticate', async ({page}) => {
     await test.step("Authenticate on QAuto site", async () => {
         await welcomePage.navigate();
         await welcomePage.loginAsUser();
-        await welcomePage.loginModal.saveSession();
+        await welcomePage.saveSession();
     });
 });

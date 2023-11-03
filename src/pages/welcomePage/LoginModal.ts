@@ -32,9 +32,4 @@ export class LoginModal extends BasePage {
     async clickLoginButton() {
         await this._page.getByRole('button', {name: 'Login'}).click();
     }
-
-    public async saveSession() {
-        const authFile: string = '.auth/user.json';
-        await this._page.context().storageState({path: authFile});
-    }
 }

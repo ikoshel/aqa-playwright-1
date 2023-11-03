@@ -32,4 +32,9 @@ export class BasePage extends BaseComponent {
         await this.logoutButton.click()
         await expect(this._page).toHaveURL('/')
     }
+
+    public async saveSession() {
+        const authFile: string = '.auth/user.json';
+        await this._page.context().storageState({path: authFile});
+    }
 }
