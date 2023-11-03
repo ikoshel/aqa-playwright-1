@@ -1,13 +1,14 @@
 import {test as setup, test} from '@playwright/test';
-import {LoginPage} from "../project/pages/LoginPage";
+import {LoginModal} from "../src/pages/welcomePage/LoginModal";
+import {WelcomePage} from "../src/pages/welcomePage/WelcomePage";
 
 setup('authenticate', async ({page}) => {
-    const loginPage = new LoginPage(page);
+    new LoginModal(page);
+    const welcomePage = new WelcomePage(page);
 
     await test.step("Authenticate on QAuto site", async () => {
-        await loginPage.navigateTo('/');
-        await loginPage.signIn(process.env.EMAIL, process.env.PASSWORD);
-        await loginPage.verifyProfileButtonVisible();
-        await loginPage.saveSession();
+        await welcomePage.navigate();
+        await welcomePage.loginAsUser();
+        await welcomePage.saveSession();
     });
 });
