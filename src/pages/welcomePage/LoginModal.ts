@@ -3,15 +3,12 @@ import {BasePage} from "../../BasePage";
 import Header from "../components/Header";
 
 export class LoginModal extends BasePage {
-    private header: Header;
 
     constructor(page: Page) {
         super(page, '/', page.locator('button', {hasText: 'Guest log in'}));
-        this.header = new Header(page);
     }
 
     public async signIn(email: string, password: string, rememberMe: boolean = true) {
-        await this.header.clickSignInButton();
         await this.fillEmail(email);
         await this.fillPassword(password);
         if (rememberMe) {
