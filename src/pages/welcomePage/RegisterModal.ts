@@ -1,9 +1,7 @@
 import {expect, Locator, Page} from "@playwright/test";
-import {BasePage} from "../BasePage";
+import BaseComponent from "../../BaseComponent";
 import {
-    anotherValidPassword,
-    expectedErrorMessagesEmptyFields,
-    expectedErrorMessagesForPasswordWrongData,
+    anotherValidPassword, expectedErrorMessagesEmptyFields, expectedErrorMessagesForPasswordWrongData,
     expectedErrorMessagesWhenPasswordsDoNotMatch,
     expectedErrorMessagesWrongData,
     expectedValidationMassagesWrongLength,
@@ -20,17 +18,15 @@ import {
     wrongDataEmail,
     wrongDataLastName,
     wrongDataName
-} from "../../fixtures/registerPageFixtures";
-import {deleteApi, postApi} from "../../utils/apiHelper";
+} from "../../../tests/e2e/register/fixtures/registerPageFixtures";
 
-export class WelcomePage extends BasePage {
-
-    private SIGNUP_NAME_SELECTOR = '#signupName';
-    private SIGNUP_LAST_NAME_SELECTOR = '#signupLastName';
-    private SIGNUP_EMAIL_SELECTOR = '#signupEmail';
-    private SIGNUP_PASSWORD_SELECTOR = '#signupPassword';
-    private SIGNUP_REPEAT_PASSWORD_SELECTOR = '#signupRepeatPassword';
-    private ERROR_MESSAGE_SELECTOR = '.invalid-feedback p';
+export default class RegisterModal extends BaseComponent {
+    private SIGNUP_NAME_SELECTOR: string = '#signupName';
+    private SIGNUP_LAST_NAME_SELECTOR: string = '#signupLastName';
+    private SIGNUP_EMAIL_SELECTOR: string = '#signupEmail';
+    private SIGNUP_PASSWORD_SELECTOR: string  = '#signupPassword';
+    private SIGNUP_REPEAT_PASSWORD_SELECTOR: string = '#signupRepeatPassword';
+    private ERROR_MESSAGE_SELECTOR: string = '.invalid-feedback p';
 
     private nameInput: Locator;
     private lastNameInput: Locator;
@@ -38,16 +34,15 @@ export class WelcomePage extends BasePage {
     private passwordInput: Locator;
     private rePasswordInput: Locator;
     private readonly errorMessage: Locator;
-
     constructor(page: Page) {
-        super(page);
+        super(page, page.locator('div.modal-content'));
 
-        this.nameInput = this.page.locator(this.SIGNUP_NAME_SELECTOR);
-        this.lastNameInput = this.page.locator(this.SIGNUP_LAST_NAME_SELECTOR);
-        this.emailInput = this.page.locator(this.SIGNUP_EMAIL_SELECTOR);
-        this.passwordInput = this.page.locator(this.SIGNUP_PASSWORD_SELECTOR);
-        this.rePasswordInput = this.page.locator(this.SIGNUP_REPEAT_PASSWORD_SELECTOR);
-        this.errorMessage = this.page.locator(this.ERROR_MESSAGE_SELECTOR)
+        this.nameInput = this._container.locator(this.SIGNUP_NAME_SELECTOR);
+        this.lastNameInput = this._container.locator(this.SIGNUP_LAST_NAME_SELECTOR);
+        this.emailInput = this._container.locator(this.SIGNUP_EMAIL_SELECTOR);
+        this.passwordInput = this._container.locator(this.SIGNUP_PASSWORD_SELECTOR);
+        this.rePasswordInput = this._container.locator(this.SIGNUP_REPEAT_PASSWORD_SELECTOR);
+        this.errorMessage = this._container.locator(this.ERROR_MESSAGE_SELECTOR)
     }
 
     public async fillFormWithValues(name: string, lastName: string, email: string, password: string, rePassword: string) {
@@ -88,16 +83,12 @@ export class WelcomePage extends BasePage {
         await this.fillFormWithValues(validName, validLastName, validEmail, validPassword, anotherValidPassword);
     }
 
-    public async clickSignUpButton() {
-        await this.page.getByRole('button', {name: 'Sign up'}).click();
-    }
-
     public async clickNameInput() {
         await this.nameInput.click();
     }
 
     public async clickRegisterButton() {
-        await this.page.getByRole('button', {name: 'Register'}).click();
+        await this._page.getByRole('button', {name: 'Register'}).click();
     }
 
     public async clearAllRegisterFields() {
@@ -146,7 +137,7 @@ export class WelcomePage extends BasePage {
     }
 
     public async validateBorderColorForErrorFields() {
-        const inputsWithRedBorder = this.errorMessage;
+        const inputsWithRedBorder: Locator = this.errorMessage;
         const expectedBorderColor: string = 'rgb(220, 53, 69)';
         for (const input of await inputsWithRedBorder.all()) {
             await expect.soft(input).toHaveCSS('border-color', expectedBorderColor);
@@ -154,38 +145,10 @@ export class WelcomePage extends BasePage {
     }
 
     public async expectRegistrationCompletePopup() {
-        await expect(this.page.locator('div').filter({hasText: 'Registration complete'}).nth(3)).toBeVisible();
+        await expect(this._page.locator('div').filter({hasText: 'Registration complete'}).nth(3)).toBeVisible();
     }
 
     public async expectDisabledRegisterButtonWhenDataIsInvalid() {
-        await expect(this.page.getByRole('button', {name: 'Register'})).toBeDisabled();
-    }
-
-    public async deleteNewUser() {
-        try {
-            const headers = {
-                headers: {
-                    authorization: process.env.AUTHORIZATION_TOKEN,
-                    'content-type': 'application/json',
-                },
-                withCredentials: true,
-            };
-            const response = await postApi(`${process.env.BASE_API_URL}/api/auth/signin`, {email: validEmail, password: validPassword}, headers);
-
-            const cookies = response.headers['set-cookie'];
-            const sid = cookies[0].split(';')[0];
-
-            await deleteApi(
-                `${process.env.BASE_API_URL}/api/users`,
-                {
-                    headers: {
-                        authorization: process.env.AUTHORIZATION_TOKEN,
-                        cookie: sid,
-                    },
-                }
-            );
-        } catch (error) {
-            console.log("An error occurred:", error.message);
-        }
+        await expect(this._page.getByRole('button', {name: 'Register'})).toBeDisabled();
     }
 }
