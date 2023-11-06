@@ -4,6 +4,7 @@ import RegisterModal from "./RegisterModal";
 import {LoginModal} from "./LoginModal";
 import GaragePage from "../panel/garagePage/GaragePage";
 import Header from "../components/Header";
+import {config as testConfig} from "./../../../config/config"
 
 export class WelcomePage extends BasePage {
     registerModal: RegisterModal;
@@ -24,7 +25,7 @@ export class WelcomePage extends BasePage {
 
     public async loginAsUser() {
         await this.header.clickSignInButton();
-        await this.loginModal.signIn(process.env.EMAIL, process.env.PASSWORD);
+        await this.loginModal.signIn(testConfig.email, testConfig.password);
         await expect(this._page).toHaveURL('/panel/garage')
         return new GaragePage(this._page)
     }

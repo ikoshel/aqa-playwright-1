@@ -6,6 +6,8 @@
   "main": "index.js",
   "scripts": {
     "test": "npx playwright test --project=e2e-chromium",
+    "test:smoke": "npx playwright test --project=e2e-chromium -c playwright.config.smoke.ts",
+    "test:regression": "npx playwright test --project=e2e-chromium -c playwright.config.regression.ts",
     "test:ui": "npx playwright test --ui",
     "report": "npx playwright show-report"
   },
