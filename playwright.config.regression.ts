@@ -10,7 +10,7 @@ import {config as testConfig} from "./config/config";
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-    grep: /smoke/,
+    grep: /regression/,
     globalSetup: './globalSetup',
     testDir: './tests',
     /* Run tests in files in parallel */
