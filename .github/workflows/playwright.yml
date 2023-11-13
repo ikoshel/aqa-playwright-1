@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies ⌛
         run: npm ci
       - name: Run tests 🎭
-        run: npx playwright test --project=e2e-chromium
+        run: npx playwright test --project=e2e-chromium -c playwright.config.regression.ts
         env:
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}

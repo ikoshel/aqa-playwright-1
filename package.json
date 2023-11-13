@@ -9,13 +9,15 @@
     "test:smoke": "npx playwright test --project=e2e-chromium -c playwright.config.smoke.ts",
     "test:regression": "npx playwright test --project=e2e-chromium -c playwright.config.regression.ts",
     "test:ui": "npx playwright test --ui",
-    "report": "npx playwright show-report"
+    "report": "npx playwright show-report",
+    "syncTestomat": "TESTOMATIO=tstmt_JZKHb0zb6n-CbHzGs3iibpYgDQ7JVkF3Tg1698440732 npx check-tests@latest Playwright \"**/*{.,_}{test,spec,cy}.ts\" --typescript -d tests/"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.39.0",
+    "@testomatio/reporter": "^1.0.17",
     "@types/faker": "^6.6.9",
     "@types/node": "^20.8.9"
   },

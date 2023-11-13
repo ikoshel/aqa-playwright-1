@@ -29,9 +29,9 @@ export default defineConfig({
         httpCredentials: testConfig.httpCredentials,
 
         baseURL: testConfig.baseURL,
-        trace: 'on-first-retry',
+        trace: process.env.CI ? 'off' : 'on-first-retry',
         screenshot: 'only-on-failure',
-        video: 'on-first-retry',
+        video: process.env.CI ? 'off' : 'retain-on-failure',
     },
 
     projects: [
@@ -49,9 +49,9 @@ export default defineConfig({
                     fullPage: true
                 },
                 browserName: 'chromium',
-                video: 'on',
+                //video: 'on',
                 viewport: {width: 1920, height: 1080},
-                trace: 'retain-on-failure'
+                //trace: 'retain-on-failure'
             }
         },
         {

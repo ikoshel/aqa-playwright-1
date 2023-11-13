@@ -1,8 +1,8 @@
 import {expect, test} from '@playwright/test';
 
-test.describe('Test for home page', () => {
+test.describe('Test for home page @S5aa0dfdf', () => {
 
-    test('Has title @regression', async ({page}) => {
+    test('Has title @regression @T341386f2', async ({page}) => {
         await test.step("Navigate to QAuto site", async () => {
             await page.goto('/');
         });
@@ -15,7 +15,7 @@ test.describe('Test for home page', () => {
 
 test.describe('Tests for profile page', () => {
 
-    test('Profile has correct first and last names @regression', async ({page}) => {
+    test('Profile has correct first and last names @regression @T316287c8', async ({page}) => {
         await test.step("Navigate to Garage section", async () => {
             await page.goto('/panel/garage');
         });

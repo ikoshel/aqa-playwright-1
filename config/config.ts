@@ -9,6 +9,11 @@ export const config = {
     },
     email: process.env.EMAIL,
     password: process.env.PASSWORD,
+    reporters: {
+        testomat: {
+            key: process.env.TESTOMATIO
+        }
+    },
     testomatIO: process.env.TESTOMATIO,
     authorizationToken: process.env.AUTHORIZATION_TOKEN
 }
