@@ -5,3 +5,4 @@ node_modules/
 /playwright/.cache/
 /.env
 /.auth/
+/testomatio_tmp/
