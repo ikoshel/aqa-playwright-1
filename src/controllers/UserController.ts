@@ -1,14 +1,15 @@
 import axios from "axios";
+import {config as testConfig} from "./../../config/config";
 
 export default class UserController {
     // Get user ID
     async getUserId(email: string, password: string): Promise<string> {
         try {
-            const url: string = `${process.env.BASE_API_URL}/api/auth/signin`;
+            const url: string = `${testConfig.baseURL}/api/auth/signin`;
             const body: object = {email, password};
             const headers: object = {
                 headers: {
-                    authorization: process.env.AUTHORIZATION_TOKEN,
+                    authorization: testConfig.authorizationToken,
                     'content-type': 'application/json',
                 },
                 withCredentials: true,
@@ -24,10 +25,10 @@ export default class UserController {
     // Delete user by ID
     async deleteUserById(email: string, password: string): Promise<void> {
         try {
-            const url: string = `${process.env.BASE_API_URL}/api/users`;
+            const url: string = `${testConfig.baseURL}/api/users`;
             const headers: object = {
                 headers: {
-                    authorization: process.env.AUTHORIZATION_TOKEN,
+                    authorization: testConfig.authorizationToken,
                     cookie: await this.getUserId(email, password),
                 },
             };

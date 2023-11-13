@@ -2,7 +2,7 @@ import {expect, test} from '@playwright/test';
 
 test.describe('Test for home page', () => {
 
-    test('Has title', async ({page}) => {
+    test('Has title @regression', async ({page}) => {
         await test.step("Navigate to QAuto site", async () => {
             await page.goto('/');
         });
@@ -15,7 +15,7 @@ test.describe('Test for home page', () => {
 
 test.describe('Tests for profile page', () => {
 
-    test('Profile has correct first and last names', async ({page}) => {
+    test('Profile has correct first and last names @regression', async ({page}) => {
         await test.step("Navigate to Garage section", async () => {
             await page.goto('/panel/garage');
         });
@@ -23,7 +23,7 @@ test.describe('Tests for profile page', () => {
             await page.getByRole('link', {name: 'Profile'}).click();
         });
         await test.step("Has Profile correct first and last names", async () => {
-            const profileNameElement = await page.locator('p.profile_name');
+            const profileNameElement = page.locator('p.profile_name');
             expect(profileNameElement).not.toBeNull();
 
             const profileName = await profileNameElement.innerText();

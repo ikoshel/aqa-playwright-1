@@ -23,40 +23,40 @@ test.describe('Positive tests for Register modal window', () => {
         await welcomePage.logout();
         await userController.deleteUserById(validEmail, validPassword);
     });
-    test('Should register a new user', async () => {
+    test('Should register a new user @smoke @regression', async () => {
         await welcomePage.registerModal.fillFormWithValidData();
         await welcomePage.registerModal.clickRegisterButton();
         await welcomePage.registerModal.expectRegistrationCompletePopup();
     });
 });
 test.describe('Negative tests for Register modal window', () => {
-    test('Should be validation messages for wrong length Name and Last name', async () => {
+    test('Should be validation messages for wrong length Name and Last name @smoke @regression', async () => {
         await welcomePage.registerModal.fillFormWithShortLengthNameAndLastName();
         await welcomePage.registerModal.fillFormWithLongLengthNameAndLastName();
     });
-    test('Should be disabled register button when data is invalid', async () => {
+    test('Should be disabled register button when data is invalid @smoke @regression', async () => {
         await welcomePage.registerModal.fillFormUpWithInvalidData();
         await welcomePage.registerModal.expectDisabledRegisterButtonWhenDataIsInvalid();
     });
-    test('Should be all register fields are required', async () => {
+    test('Should be all register fields are required @smoke @regression', async () => {
         await welcomePage.registerModal.fillFormWithValidData();
         await welcomePage.registerModal.clearAllRegisterFields();
         await welcomePage.registerModal.validateMessagesForEmptyRegisterFields();
     });
-    test('Should be all error fields with red border', async () => {
+    test('Should be all error fields with red border @smoke @regression', async () => {
         await welcomePage.registerModal.fillFormWithValidData();
         await welcomePage.registerModal.clearAllRegisterFields();
         await welcomePage.registerModal.validateBorderColorForErrorFields();
     });
-    test('Should be correct format for Name, Last name and Email', async () => {
+    test('Should be correct format for Name, Last name and Email @smoke @regression', async () => {
         await welcomePage.registerModal.fillFormWithWrongDataForNameAndLastNameAndEmail();
         await welcomePage.registerModal.validateErrorMessagesForNameAndLastNameWrongData();
     });
-    test('Should be correct format for Password', async () => {
+    test('Should be correct format for Password @smoke @regression', async () => {
         await welcomePage.registerModal.fillFormWithWrongDataForPassword();
         await welcomePage.registerModal.validateErrorMessagesForPasswordWrongData();
     });
-    test('Should be validate massage when passwords do not match', async () => {
+    test('Should be validate massage when passwords do not match @smoke @regression', async () => {
         await welcomePage.registerModal.fillFormWithDifferencePasswords();
         await welcomePage.registerModal.clickNameInput();
         await welcomePage.registerModal.validateMassageWhenPasswordsDoNotMatch();
