@@ -1,6 +1,5 @@
 import {Page} from "@playwright/test";
-import {BasePage} from "../../BasePage";
-import Header from "../components/Header";
+import {BasePage} from "../BasePage";
 
 export class LoginModal extends BasePage {
 

@@ -1,4 +1,5 @@
 import * as dotenv from 'dotenv';
+
 dotenv.config();
 
 export const config = {
@@ -7,13 +8,18 @@ export const config = {
         username: process.env.HTTP_CREDENTIALS_USERNAME,
         password: process.env.HTTP_CREDENTIALS_PASSWORD,
     },
-    email: process.env.EMAIL,
-    password: process.env.PASSWORD,
+    userCredentials: {
+        email: process.env.EMAIL_USER,
+        password: process.env.PASSWORD_USER,
+    },
+    managerCredentials: {
+        email: process.env.EMAIL_MANAGER,
+        password: process.env.PASSWORD_MANAGER,
+    },
     reporters: {
         testomat: {
             key: process.env.TESTOMATIO
         }
     },
-    testomatIO: process.env.TESTOMATIO,
     authorizationToken: process.env.AUTHORIZATION_TOKEN
 }
