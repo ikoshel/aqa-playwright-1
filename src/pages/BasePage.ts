@@ -33,7 +33,7 @@ export class BasePage extends BaseComponent {
         await expect(this._page).toHaveURL('/')
     }
 
-    public async saveSessionAsUserOfType(type: Role) {
+    public async saveSession(type: Role) {
         let authFile: string;
 
         switch (type) {

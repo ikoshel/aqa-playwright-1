@@ -8,16 +8,16 @@ async function loginAs(browser: Browser, type: Role) {
     const welcomePage = new WelcomePage(page);
     await welcomePage.navigate();
     await welcomePage.authentication(type);
-    await welcomePage.saveSessionAsUserOfType(type);
+    await welcomePage.saveSession(type);
     await context.close();
 }
 
 setup('authenticate', async ({browser}) => {
-    await test.step("Authenticate on QAuto site as user", async () => {
+    await test.step("Authenticate as user", async () => {
         await loginAs(browser, Role.User);
     });
 
-    await test.step("Authenticate on QAuto site as manager", async () => {
+    await test.step("Authenticate as manager", async () => {
         await loginAs(browser, Role.Manager);
     });
 });
