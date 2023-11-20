@@ -13,6 +13,6 @@ export default class GaragePage extends BasePage {
 
     public async validateNameAndLastnameForProfile(expectedNameAndLastName: string) {
         const profileNameElement: Locator = this._page.locator('p.profile_name');
-        expect(await profileNameElement.innerText()).toBe(expectedNameAndLastName);
+        await expect(profileNameElement).toHaveText(expectedNameAndLastName);
     }
 }
