@@ -6,7 +6,7 @@ import {validEmail, validPassword} from "./fixtures/registerPageFixtures";
 let welcomePage: WelcomePage;
 let userController: UserController;
 
-test.use({storageState: {cookies: [], origins: []}});
+// test.use({storageState: {cookies: [], origins: []}});
 test.beforeAll(async ({browser}) => {
     const context = await browser.newContext();
     let page: Page = await context.newPage();

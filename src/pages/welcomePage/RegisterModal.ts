@@ -1,5 +1,5 @@
 import {expect, Locator, Page} from "@playwright/test";
-import BaseComponent from "../../BaseComponent";
+import BaseComponent from "../BaseComponent";
 import {
     anotherValidPassword,
     expectedErrorMessagesEmptyFields,

@@ -50,7 +50,7 @@ export default defineConfig({
             dependencies: ['setup'],
             use: {
                 // Use prepared auth state.
-                storageState: '.auth/user.json',
+                //storageState: '.auth/user.json',
                 screenshot: {
                     mode: 'only-on-failure',
                     fullPage: true
