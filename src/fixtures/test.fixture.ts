@@ -11,6 +11,7 @@ export const test = base.extend({
         const garagePage = new GaragePage(page);
         await garagePage.navigate();
         await use(garagePage);
+        await ctx.close();
     },
     managerProfilePage: async ({browser}, use) => {
         const ctx = await browser.newContext({
@@ -20,5 +21,6 @@ export const test = base.extend({
         const garagePage = new GaragePage(page);
         await garagePage.navigate();
         await use(garagePage);
+        await ctx.close();
     },
 })
