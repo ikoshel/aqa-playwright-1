@@ -11,9 +11,9 @@ test.describe("API", () => {
     test.beforeAll(() => {
         carController = new CarController();
     });
-    test.describe('Positive tests for Garage API requests', ()=>{
+    test.describe('Positive tests for Garage API requests', () => {
         test.only('Should create new cars @smoke @regression', async ({userAPIClient}) => {
-            const response = await carController.createCar(userAPIClient,VALID_BRANDS_RESPONSE_BODY, VALID_BRAND_MODELS);
+            const response = await carController.createCar(userAPIClient, VALID_BRANDS_RESPONSE_BODY, VALID_BRAND_MODELS);
 
             await expect(response, "Positive response should be returned").toBeOK();
             expect(response.status(), "Status code should be 201").toEqual(201);
@@ -22,7 +22,7 @@ test.describe("API", () => {
             await carController.deleteCarsFromList(userAPIClient, VALID_BRANDS_RESPONSE_BODY, VALID_BRAND_MODELS);
         });
     })
-    test.describe('Negative tests for Garage API requests', ()=>{
+    test.describe('Negative tests for Garage API requests', () => {
         test('Should not create cars with invalid brand or model data @smoke @regression', async ({userAPIClient}) => {
             const response = await carController.createCar(userAPIClient, INVALID_BRANDS_RESPONSE_BODY, VALID_BRAND_MODELS);
 

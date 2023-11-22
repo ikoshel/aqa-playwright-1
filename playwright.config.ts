@@ -1,4 +1,4 @@
-import {defineConfig, devices} from '@playwright/test';
+import {defineConfig} from '@playwright/test';
 import {config as testConfig} from "./config/config";
 /**
  * Read environment variables from file.
@@ -21,19 +21,19 @@ export default defineConfig({
     /* Retry on CI only */
     retries: process.env.CI ? 2 : 0,
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-    // reporter: [
-    //     ['html', {open: 'never'}],
-    //     [process.env.CI ? 'github' : 'list'],
-    //     [
-    //         '@testomatio/reporter/lib/adapter/playwright.js',
-    //         {
-    //             apiKey: testConfig.reporters.testomat.key,
-    //         },
-    //     ],],
     reporter: [
         ['html', {open: 'never'}],
         [process.env.CI ? 'github' : 'list'],
-        ],
+        [
+            '@testomatio/reporter/lib/adapter/playwright.js',
+            {
+                apiKey: testConfig.reporters.testomat.key,
+            },
+        ],],
+    // reporter: [
+    //     ['html', {open: 'never'}],
+    //     [process.env.CI ? 'github' : 'list'],
+    //     ],
 
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {
@@ -69,8 +69,7 @@ export default defineConfig({
             name: 'API',
             testMatch: /\/tests\/api\/.*\/*.(test|spec).(js|ts)/,
             dependencies: ['setup'],
-            use: {
-            }
+            use: {}
         },
     ],
 });
