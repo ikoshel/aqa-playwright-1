@@ -1,18 +1,12 @@
-import {expect, Locator, Page} from "@playwright/test";
+import {Page} from "@playwright/test";
 import {BasePage} from "../../BasePage";
+import PanelLeftMenu from "../../components/PanelLeftMenu";
 
 export default class GaragePage extends BasePage {
-
+    panelLeftMenu: PanelLeftMenu;
     constructor(page: Page) {
         super(page, '/panel/garage', page.locator('app-panel-layout > .panel-layout', {has: page.locator('button', {hasText: 'Add car'})}));
+        this.panelLeftMenu = new PanelLeftMenu(page);
     }
 
-    public async clickProfileButton() {
-        await this._page.getByRole('link', {name: 'Profile'}).click();
-    }
-
-    public async validateNameAndLastnameForProfile(expectedNameAndLastName: string) {
-        const profileNameElement: Locator = this._page.locator('p.profile_name');
-        await expect(profileNameElement).toHaveText(expectedNameAndLastName);
-    }
 }

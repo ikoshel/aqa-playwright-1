@@ -1,6 +1,6 @@
 import {expect, Locator, Page} from "@playwright/test";
 import BaseComponent from "./BaseComponent";
-import {STORAGE_STATE_MANAGER_PATH, STORAGE_STATE_USER_PATH} from "../data/storageState";
+import {STORAGE_STATE_MANAGER_PATH, STORAGE_STATE_USER_PATH} from "../data/storageStatePath";
 import {Role} from "../data/roles";
 
 export class BasePage extends BaseComponent {

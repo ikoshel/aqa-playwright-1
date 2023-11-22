@@ -21,15 +21,19 @@ export default defineConfig({
     /* Retry on CI only */
     retries: process.env.CI ? 2 : 0,
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
+    // reporter: [
+    //     ['html', {open: 'never'}],
+    //     [process.env.CI ? 'github' : 'list'],
+    //     [
+    //         '@testomatio/reporter/lib/adapter/playwright.js',
+    //         {
+    //             apiKey: testConfig.reporters.testomat.key,
+    //         },
+    //     ],],
     reporter: [
         ['html', {open: 'never'}],
         [process.env.CI ? 'github' : 'list'],
-        [
-            '@testomatio/reporter/lib/adapter/playwright.js',
-            {
-                apiKey: testConfig.reporters.testomat.key,
-            },
-        ],],
+        ],
 
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {
@@ -52,20 +56,20 @@ export default defineConfig({
                 // Use prepared auth state.
                 //storageState: '.auth/user.json',
                 screenshot: {
-                    mode: 'only-on-failure',
+                    mode: process.env.CI ? 'only-on-failure' : "on",
                     fullPage: true
                 },
                 browserName: 'chromium',
-                //video: 'on',
+                video: process.env.CI ? 'off' : 'on',
                 viewport: {width: 1920, height: 1080},
-                //trace: 'retain-on-failure'
+                trace: process.env.CI ? 'off' : 'retain-on-failure'
             }
         },
         {
             name: 'API',
             testMatch: /\/tests\/api\/.*\/*.(test|spec).(js|ts)/,
+            dependencies: ['setup'],
             use: {
-                ...devices['Desktop Chrome']
             }
         },
     ],
