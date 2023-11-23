@@ -1,4 +1,4 @@
-import {defineConfig, devices} from '@playwright/test';
+import {defineConfig} from '@playwright/test';
 import {config as testConfig} from "./config/config";
 /**
  * Read environment variables from file.
@@ -30,6 +30,10 @@ export default defineConfig({
                 apiKey: testConfig.reporters.testomat.key,
             },
         ],],
+    // reporter: [
+    //     ['html', {open: 'never'}],
+    //     [process.env.CI ? 'github' : 'list'],
+    //     ],
 
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {
@@ -52,21 +56,20 @@ export default defineConfig({
                 // Use prepared auth state.
                 //storageState: '.auth/user.json',
                 screenshot: {
-                    mode: 'only-on-failure',
+                    mode: process.env.CI ? 'only-on-failure' : "on",
                     fullPage: true
                 },
                 browserName: 'chromium',
-                //video: 'on',
+                video: process.env.CI ? 'off' : 'on',
                 viewport: {width: 1920, height: 1080},
-                //trace: 'retain-on-failure'
+                trace: process.env.CI ? 'off' : 'retain-on-failure'
             }
         },
         {
             name: 'API',
             testMatch: /\/tests\/api\/.*\/*.(test|spec).(js|ts)/,
-            use: {
-                ...devices['Desktop Chrome']
-            }
+            dependencies: ['setup'],
+            use: {}
         },
     ],
 });
