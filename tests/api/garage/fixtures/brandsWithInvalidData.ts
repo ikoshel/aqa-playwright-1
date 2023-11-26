@@ -1,4 +1,5 @@
-export const INVALID_BRANDS_RESPONSE_BODY: object = {
+import {IBrandsResponse} from "../../../../src/data/types/types";
+export const INVALID_BRANDS_RESPONSE_BODY: IBrandsResponse = {
     "status": "ok",
     "data": [
         {

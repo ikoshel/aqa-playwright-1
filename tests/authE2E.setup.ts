@@ -12,7 +12,7 @@ async function loginAs(browser: Browser, type: Role) {
     await context.close();
 }
 
-setup('authenticate', async ({browser}) => {
+setup('authenticate E2E', async ({browser}) => {
     await test.step("Authenticate as user", async () => {
         await loginAs(browser, Role.User);
     });
