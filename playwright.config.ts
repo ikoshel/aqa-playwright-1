@@ -21,19 +21,19 @@ export default defineConfig({
     /* Retry on CI only */
     retries: process.env.CI ? 2 : 0,
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-    reporter: [
-        ['html', {open: 'never'}],
-        [process.env.CI ? 'github' : 'list'],
-        [
-            '@testomatio/reporter/lib/adapter/playwright.js',
-            {
-                apiKey: testConfig.reporters.testomat.key,
-            },
-        ],],
     // reporter: [
     //     ['html', {open: 'never'}],
     //     [process.env.CI ? 'github' : 'list'],
-    //     ],
+    //     [
+    //         '@testomatio/reporter/lib/adapter/playwright.js',
+    //         {
+    //             apiKey: testConfig.reporters.testomat.key,
+    //         },
+    //     ],],
+    reporter: [
+        ['html', {open: 'never'}],
+        [process.env.CI ? 'github' : 'list'],
+        ],
 
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {
@@ -47,11 +47,11 @@ export default defineConfig({
 
     projects: [
         // Setup project
-        {name: 'setup', testMatch: /.*\.setup\.ts/},
+        {name: 'setupAuthE2E', testMatch: /.*\authE2E.setup\.ts/},
         {
             name: 'e2e-chromium',
             testMatch: /\/tests\/e2e\/.*\/*.(test|spec).(js|ts)/,
-            dependencies: ['setup'],
+            dependencies: ['setupAuthE2E'],
             use: {
                 // Use prepared auth state.
                 //storageState: '.auth/user.json',
@@ -66,10 +66,8 @@ export default defineConfig({
             }
         },
         {
-            name: 'API',
-            testMatch: /\/tests\/api\/.*\/*.(test|spec).(js|ts)/,
-            dependencies: ['setup'],
-            use: {}
+            name: 'api',
+            testMatch: /\/tests\/api\/.*\/*.(test|spec).(js|ts)/
         },
     ],
 });

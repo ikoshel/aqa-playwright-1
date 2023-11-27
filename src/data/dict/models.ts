@@ -1,5 +1,6 @@
-export const VALID_BRAND_MODELS: object = {
-    1:  {
+import {IBrandModels} from "../types/types";
+export const VALID_BRAND_MODELS: IBrandModels = {
+    1: {
         "status": "ok",
         "data": [
             {
@@ -29,7 +30,7 @@ export const VALID_BRAND_MODELS: object = {
             }
         ]
     },
-    2:  {
+    2: {
         "status": "ok",
         "data": [
             {

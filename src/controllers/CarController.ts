@@ -1,4 +1,5 @@
 import {expect} from "@playwright/test";
+import {IBrandModels, IBrandsResponse} from "../data/types/types";
 
 export default class CarController {
     // Get cars list
@@ -8,7 +9,7 @@ export default class CarController {
             let arrayCarsID: number[];
             if (response) {
                 const objResponse = await response.json();
-                arrayCarsID = objResponse.data.map(objResponse => objResponse.id);
+                arrayCarsID = objResponse.data.map((objResponse: { id: number; }) => objResponse.id);
             }
             return arrayCarsID;
         } catch (error) {
@@ -17,9 +18,8 @@ export default class CarController {
     }
 
     // Create car
-    async createCar(page: any, brand: object, model: object) {
+    async createCar(page: any, brand: IBrandsResponse, model: IBrandModels) {
         try {
-            // @ts-ignore
             const brandId: number = brand.data[0].id;
             const modelId: number = model[brandId].data[1].id;
             const requestBody: object = {
@@ -36,7 +36,7 @@ export default class CarController {
     }
 
     // Delete cars from list
-    async deleteCarsFromList(page: any, brand: object, model: object) {
+    async deleteCarsFromList(page: any, brand: IBrandsResponse, model: IBrandModels) {
         try {
             await this.createCar(page, brand, model)
             const arrayCarsID = await this.getCarsList(page);

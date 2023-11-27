@@ -1,4 +1,5 @@
-export const VALID_BRANDS_RESPONSE_BODY: object = {
+import {IBrandsResponse} from "../types/types";
+export const VALID_BRANDS_RESPONSE_BODY: IBrandsResponse = {
     "status": "ok",
     "data": [
         {
