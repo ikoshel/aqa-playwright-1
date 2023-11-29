@@ -1,39 +1,71 @@
 import {test} from '../../../src/fixtures/test.fixture';
 import {expect} from "@playwright/test";
-import CarController from "../../../src/controllers/CarController";
 import {VALID_BRANDS_RESPONSE_BODY} from "../../../src/data/dict/brands";
-import {VALID_BRAND_MODELS} from "../../../src/data/dict/models";
-import {INVALID_BRANDS_RESPONSE_BODY} from "./fixtures/brandsWithInvalidData";
+import axios, {AxiosInstance} from "axios";
+import {config} from "../../../config/config";
+import {wrapper} from 'axios-cookiejar-support';
+import {CookieJar} from 'tough-cookie';
 
-let carController: CarController;
+let client: AxiosInstance;
+test.beforeAll(async () => {
+    const jar = new CookieJar();
+    client = wrapper(axios.create({
+        baseURL: config.apiURL,
+        jar,
+        validateStatus: status => {
+            return status < 501
+        }
+    }));
+
+    await client.post('/auth/signin', {
+        "email": config.userCredentials.email,
+        "password": config.userCredentials.password,
+        "remember": false
+    })
+})
 
 test.describe("API", () => {
-    test.beforeAll(() => {
-        carController = new CarController();
-    });
     test.describe('Positive tests for Garage API requests', () => {
-        test('Should create new cars @smoke @regression', async ({userAPIClient}) => {
-            const response = await carController.createCar(userAPIClient, VALID_BRANDS_RESPONSE_BODY, VALID_BRAND_MODELS);
-
-            await expect(response, "Positive response should be returned").toBeOK();
-            expect(response.status(), "Status code should be 201").toEqual(201);
-        });
-        test('Should delete cars @smoke @regression', async ({userAPIClient}) => {
-            await carController.deleteCarsFromList(userAPIClient, VALID_BRANDS_RESPONSE_BODY, VALID_BRAND_MODELS);
-        });
+        for (const brand of VALID_BRANDS_RESPONSE_BODY.data) {
+            test(`Should return valid models for ${brand.title} brand @smoke @regression`, async () => {
+                const brandId = brand.id
+                const response = await client.get(`/cars/models?carBrandId=${brandId}`)
+                expect(response.status, "Status code should be 200").toEqual(200)
+            })
+        }
     })
-    test.describe.skip('Negative tests for Garage API requests', () => {
-        test('Should not create cars with invalid brand or model data @smoke @regression', async ({userAPIClient}) => {
-            const response = await carController.createCar(userAPIClient, INVALID_BRANDS_RESPONSE_BODY, VALID_BRAND_MODELS);
+    test.describe('Negative tests for Garage API requests', () => {
+        test('Should not allow retrieval of cars list without proper authorization @smoke @regression', async () => {
+            const jar = new CookieJar();
+            const clientUnAuth = wrapper(axios.create({
+                baseURL: config.apiURL,
+                jar,
+                validateStatus: status => {
+                    return status < 501
+                }
+            }));
 
-            expect(response.status(), "Should fail with 404 Bad Request").toEqual(404);
-            expect(response.json().message, "Error message must be 'Brand not found'").toEqual("Brand not found");
+            const response = await clientUnAuth.get('/cars');
+            expect(response.status, "Status code should be 401").toEqual(401);
+            expect(response.data.message, "Error message should be 'Not authenticated'").toEqual("Not authenticated");
         });
-        test('Should not create cars with invalid userAPIClient @smoke @regression', async () => {
-            const response = await carController.createCar(null, VALID_BRANDS_RESPONSE_BODY, VALID_BRAND_MODELS);
-
-            expect(response.status(), "Should fail with 401 Unauthorized").toEqual(401);
-            expect(response.json().message, "Error message must be 'Not authenticated'").toEqual("Not authenticated");
+        test(`Should not find models for nonexistent brand @smoke @regression`, async () => {
+            const brandId = -1;
+            const response = await client.get(`/cars/models?carBrandId=${brandId}`);
+            expect(response.status, "Status code should be 404").toEqual(404);
+            expect(response.data.message, "Error message should be 'No car models found'").toEqual("No car models found");
         });
-    })
+        test('Should not allow creation of car brand with invalid data @smoke @regression', async () => {
+            const requestBody: object = {};
+            const response = await client.post('/cars', requestBody);
+            expect(response.status, "Status code should be 400").toEqual(400);
+            expect(response.data.message, "Error message should be 'Car brand id is required'").toEqual("Car brand id is required");
+        });
+        test('Should not allow retrieval of nonexistent car details @smoke @regression', async () => {
+            const carId: number = -1;
+            const response = await client.get(`/cars/${carId}`);
+            expect(response.status, 'Status code should be 404').toEqual(404);
+            expect(response.data.message, "Error message should be 'Car not found'").toEqual("Car not found");
+        });
+    });
 })
