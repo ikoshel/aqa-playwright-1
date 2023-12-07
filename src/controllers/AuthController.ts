@@ -1,4 +1,5 @@
 import BaseController from "./BaseController.js";
+import {IUserData} from "../data/types/types";
 
 export default class AuthController extends BaseController {
     private readonly SIGN_IN_PATH: string = '/auth/signin';
@@ -12,7 +13,7 @@ export default class AuthController extends BaseController {
         return this._client.post(this.SIGN_UP_PATH, userData);
     }
 
-    async signIn({email, password, remember = false}: { email: string, password: string, remember?: boolean }) {
+    async signIn({email, password, remember = false}: IUserData) {
         return this._client.post(this.SIGN_IN_PATH, {
             email,
             password,
