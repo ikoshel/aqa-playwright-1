@@ -9,7 +9,7 @@ jobs:
     name: 'Playwright Tests'
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.39.0-jammy
+      image: mcr.microsoft.com/playwright:v1.40.0-jammy
     steps:
       - name: Checkout 🛎
         uses: actions/checkout@v3
@@ -18,10 +18,35 @@ jobs:
           node-version: 18
       - name: Install dependencies ⌛
         run: npm ci
-      - name: Run tests 🎭
+      - name: Run e2e tests 🎭
         run: npx playwright test --project=e2e-chromium
         env:
-          EMAIL: ${{ secrets.EMAIL }}
-          PASSWORD: ${{ secrets.PASSWORD }}
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          PASSWORD_USER: ${{ secrets.PASSWORD_USER }}
+          EMAIL_MANAGER: ${{ secrets.EMAIL_MANAGER }}
+          PASSWORD_MANAGER: ${{ secrets.PASSWORD_MANAGER }}
           HTTP_CREDENTIALS_USERNAME: ${{ secrets.HTTP_CREDENTIALS_USERNAME }}
           HTTP_CREDENTIALS_PASSWORD: ${{ secrets.HTTP_CREDENTIALS_PASSWORD }}
+          API_URL: ${{ secrets.API_URL }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+          AUTHORIZATION_TOKEN: ${{ secrets.AUTHORIZATION_TOKEN }}
+          TESTOMATIO: ${{ secrets.TESTOMATIO }}
+      - name: Run API tests 🎭
+        run: npx playwright test --project=api
+        env:
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          PASSWORD_USER: ${{ secrets.PASSWORD_USER }}
+          EMAIL_MANAGER: ${{ secrets.EMAIL_MANAGER }}
+          PASSWORD_MANAGER: ${{ secrets.PASSWORD_MANAGER }}
+          HTTP_CREDENTIALS_USERNAME: ${{ secrets.HTTP_CREDENTIALS_USERNAME }}
+          HTTP_CREDENTIALS_PASSWORD: ${{ secrets.HTTP_CREDENTIALS_PASSWORD }}
+          API_URL: ${{ secrets.API_URL }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+          AUTHORIZATION_TOKEN: ${{ secrets.AUTHORIZATION_TOKEN }}
+          TESTOMATIO: ${{ secrets.TESTOMATIO }}
+      - name: Upload test results 📝
+        if : failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-report
+          path: playwright-report/
