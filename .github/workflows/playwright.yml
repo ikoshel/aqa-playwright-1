@@ -21,8 +21,8 @@ jobs:
 
       - name: Run e2e and API tests 🎭
         run: |
-          npx playwright test --project=e2e-chromium
           npx playwright test --project=api
+          npx playwright test --project=e2e-chromium
         env:
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           PASSWORD_USER: ${{ secrets.PASSWORD_USER }}
@@ -36,7 +36,7 @@ jobs:
           TESTOMATIO: ${{ secrets.TESTOMATIO }}
 
       - name: Upload test results 📝
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: test-report

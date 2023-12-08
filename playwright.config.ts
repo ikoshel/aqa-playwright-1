@@ -39,7 +39,7 @@ export default defineConfig({
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {
         httpCredentials: testConfig.httpCredentials,
-
+        headless: true,
         baseURL: testConfig.baseURL,
         trace: process.env.CI ? 'off' : 'on-first-retry',
         screenshot: 'only-on-failure',

@@ -1,0 +1,7 @@
+services:
+  play:
+    build: .
+    image: play
+    container_name: my-container
+    security_opt:
+      - seccomp=seccomp.json 
