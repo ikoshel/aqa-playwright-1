@@ -11,6 +11,7 @@ import {config as testConfig} from "./config/config";
  */
 export default defineConfig({
     globalSetup: './globalSetup',
+    globalTeardown: './tearDown',
     testDir: './tests',
     /* Run tests in files in parallel */
     fullyParallel: true,
@@ -33,7 +34,7 @@ export default defineConfig({
     reporter: [
         ['html', {open: 'never'}],
         [process.env.CI ? 'github' : 'list'],
-        ],
+    ],
 
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {
@@ -53,8 +54,6 @@ export default defineConfig({
             testMatch: /\/tests\/e2e\/.*\/*.(test|spec).(js|ts)/,
             dependencies: ['setupAuthE2E'],
             use: {
-                // Use prepared auth state.
-                //storageState: '.auth/user.json',
                 screenshot: {
                     mode: process.env.CI ? 'only-on-failure' : "on",
                     fullPage: true

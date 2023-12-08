@@ -23,3 +23,15 @@ export interface IModelsResponse {
 export interface IBrandModels {
     [brandId: number]: IModelsResponse;
 }
+
+export interface IUserData {
+    email: string;
+    password: string;
+    remember?: boolean;
+}
+
+export interface ICarData {
+    carBrandId: number;
+    carModelId: number;
+    mileage?: number;
+}
