@@ -6,7 +6,7 @@ on:
     branches: [ main ]
 jobs:
   playwright:
-    name: 'Playwright Tests'
+    name: 'Playwright API tests'
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.39.0-jammy
@@ -20,9 +20,7 @@ jobs:
         run: npm ci
 
       - name: Run e2e and API tests 🎭
-        run: |
-          npx playwright test --project=e2e-chromium
-          npx playwright test --project=api
+        run: npx playwright test --project=api
         env:
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           PASSWORD_USER: ${{ secrets.PASSWORD_USER }}
@@ -36,7 +34,7 @@ jobs:
           TESTOMATIO: ${{ secrets.TESTOMATIO }}
 
       - name: Upload test results 📝
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: test-report
