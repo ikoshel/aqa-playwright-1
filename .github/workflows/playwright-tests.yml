@@ -1,0 +1,77 @@
+name: tests
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+jobs:
+  playwright:
+    name: 'Playwright tests'
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.39.0-jammy
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies ⌛
+        run: npm ci
+
+      - name: Run API tests 🎭
+        run: npx playwright test --project=api
+        env:
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          PASSWORD_USER: ${{ secrets.PASSWORD_USER }}
+          EMAIL_MANAGER: ${{ secrets.EMAIL_MANAGER }}
+          PASSWORD_MANAGER: ${{ secrets.PASSWORD_MANAGER }}
+          HTTP_CREDENTIALS_USERNAME: ${{ secrets.HTTP_CREDENTIALS_USERNAME }}
+          HTTP_CREDENTIALS_PASSWORD: ${{ secrets.HTTP_CREDENTIALS_PASSWORD }}
+          API_URL: ${{ secrets.API_URL }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+          AUTHORIZATION_TOKEN: ${{ secrets.AUTHORIZATION_TOKEN }}
+          TESTOMATIO: ${{ secrets.TESTOMATIO }}
+
+      - name: Run e2e tests 🎭
+        run: npx playwright test --project=e2e-chromium
+        env:
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          PASSWORD_USER: ${{ secrets.PASSWORD_USER }}
+          EMAIL_MANAGER: ${{ secrets.EMAIL_MANAGER }}
+          PASSWORD_MANAGER: ${{ secrets.PASSWORD_MANAGER }}
+          HTTP_CREDENTIALS_USERNAME: ${{ secrets.HTTP_CREDENTIALS_USERNAME }}
+          HTTP_CREDENTIALS_PASSWORD: ${{ secrets.HTTP_CREDENTIALS_PASSWORD }}
+          API_URL: ${{ secrets.API_URL }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+          AUTHORIZATION_TOKEN: ${{ secrets.AUTHORIZATION_TOKEN }}
+          TESTOMATIO: ${{ secrets.TESTOMATIO }}
+
+      - name: Fix permissions
+        if: ${{ always() }}
+        run: |
+          chmod -c -R +rX "_site/" | while read line; do echo "::warning title=Invalid file permission automatically fixed::$line"
+            done
+
+      - name: Upload test results 📝
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results/
+          path: playwright-report/
+          retention-days: 5
+
+  deploy:
+    if: ${{ always() }}
+    needs: [tests]
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/ploy-pages@v3
