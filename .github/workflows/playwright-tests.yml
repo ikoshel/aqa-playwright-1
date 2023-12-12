@@ -1,4 +1,4 @@
-name: tests
+name: Playwright tests
 on:
   push:
     branches: [ main ]
@@ -63,7 +63,7 @@ jobs:
 
   deploy:
     if: ${{ always() }}
-    needs: [tests]
+    needs: [playwright]
     permissions:
       pages: write
       id-token: write
