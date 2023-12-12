@@ -22,18 +22,15 @@ export default defineConfig({
     /* Retry on CI only */
     retries: process.env.CI ? 2 : 0,
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-    // reporter: [
-    //     ['html', {open: 'never'}],
-    //     [process.env.CI ? 'github' : 'list'],
-    //     [
-    //         '@testomatio/reporter/lib/adapter/playwright.js',
-    //         {
-    //             apiKey: testConfig.reporters.testomat.key,
-    //         },
-    //     ],],
     reporter: [
-        ['html', {open: 'never'}],
+        ['html', {open: process.env.CI ? 'never': 'on-failure'}],
         [process.env.CI ? 'github' : 'list'],
+        // [
+        //     '@testomatio/reporter/lib/adapter/playwright.js',
+        //     {
+        //         apiKey: testConfig.reporters.testomat.key,
+        //     },
+        // ],
     ],
 
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
