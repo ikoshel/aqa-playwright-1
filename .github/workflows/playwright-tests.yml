@@ -63,7 +63,7 @@ jobs:
 
   deploy:
     if: ${{ always() }}
-    needs: [playwright]
+    needs: [ playwright ]
     permissions:
       pages: write
       id-token: write
