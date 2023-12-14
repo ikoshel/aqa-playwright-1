@@ -4,11 +4,14 @@ import {carDataAudi, carDataFord} from "../../../../src/data/dict/carData";
 import APIClient from "../../../../src/client/APIClient";
 import {getRoleData} from "../../../../src/data/dict/userData";
 import {Role} from "../../../../src/data/roles";
+import UpdateCarModel from "../../../../src/models/cars/UpdateCarModel";
+import {VALID_BRANDS_RESPONSE_BODY} from "../../../../src/data/dict/brands";
+import {VALID_BRAND_MODELS} from "../../../../src/data/dict/models";
 
 let client: APIClient;
 let idCar: number;
 test.beforeAll(async () => {
-    client = await APIClient.authenticate(undefined, getRoleData(Role.User));
+    client = await APIClient.authenticate(getRoleData(Role.User));
     const response = await client.cars.createNewCar(carDataAudi);
     idCar = response.data.data.id;
 })
@@ -19,9 +22,23 @@ test.afterAll(async () => {
 test.describe("API PUT", () => {
     test.describe("Positive tests", () => {
         test('Should edit existing car @smoke @regression', async () => {
+            const updatedCarModel = new UpdateCarModel({carBrandId: 3, carModelId: 12, mileage: 999});
+            const updatedBrand = VALID_BRANDS_RESPONSE_BODY.data.find((brand) => brand.id === updatedCarModel.carBrandId);
+            const updatedModel = VALID_BRAND_MODELS[updatedBrand.id].data.find((model)=> model.id === updatedCarModel.carModelId);
+            const expectedBody = {
+                ...updatedCarModel,
+                initialMileage: carDataAudi.mileage,
+                id: idCar,
+                carCreatedAt: expect.any(String),
+                updatedMileageAt: expect.any(String),
+                brand: updatedBrand.title,
+                model: updatedModel.title,
+                logo: updatedBrand.logoFilename
+            }
             const response = await client.cars.editExistingCar(idCar, carDataFord);
             const body = response.data;
 
+            expect(body.data, 'Returned updated car object should be valid').toEqual(expectedBody);
             expect(response.status, "Status code should be 200").toEqual(200);
             expect(body.status).toBe("ok");
         })

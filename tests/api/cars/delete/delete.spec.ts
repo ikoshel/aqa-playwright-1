@@ -8,7 +8,7 @@ import {Role} from "../../../../src/data/roles";
 let client: APIClient;
 let idCar: number;
 test.beforeAll(async () => {
-    client = await APIClient.authenticate(undefined, getRoleData(Role.User));
+    client = await APIClient.authenticate(getRoleData(Role.User));
     const response = await client.cars.createNewCar(carDataAudi);
     idCar = response.data.data.id;
 })

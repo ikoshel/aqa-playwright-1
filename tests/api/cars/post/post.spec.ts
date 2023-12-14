@@ -4,11 +4,14 @@ import {carDataAudi} from "../../../../src/data/dict/carData";
 import APIClient from "../../../../src/client/APIClient";
 import {getRoleData} from "../../../../src/data/dict/userData";
 import {Role} from "../../../../src/data/roles";
+import CreateCarModel from "../../../../src/models/cars/CreateCarModel";
+import {VALID_BRANDS_RESPONSE_BODY} from "../../../../src/data/dict/brands";
+import {VALID_BRAND_MODELS} from "../../../../src/data/dict/models";
 
 let client: APIClient;
 let idCar: number;
 test.beforeAll(async () => {
-    client = await APIClient.authenticate(undefined, getRoleData(Role.User));
+    client = await APIClient.authenticate(getRoleData(Role.User));
 })
 test.afterAll(async () => {
     await client.cars.deleteCar(idCar);
@@ -17,10 +20,25 @@ test.afterAll(async () => {
 test.describe("API POST", () => {
     test.describe("Positive tests", () => {
         test('Should create a new car @smoke @regression', async () => {
-            const response = await client.cars.createNewCar(carDataAudi);
+            const carModel = new CreateCarModel({carBrandId: 1, carModelId: 1, mileage: 22});
+            const brand = VALID_BRANDS_RESPONSE_BODY.data.find((brand) => brand.id === carModel.carBrandId);
+            const model = VALID_BRAND_MODELS[brand.id].data.find((model)=> model.id === carModel.carModelId);
+            const response = await client.cars.createNewCar(carModel);
             const body = response.data;
             idCar = body.data.id;
 
+            const expectedBody = {
+                ...carModel,
+                initialMileage: carModel.mileage,
+                id: expect.any(Number),
+                carCreatedAt: expect.any(String),
+                updatedMileageAt: expect.any(String),
+                brand: brand.title,
+                model: model.title,
+                logo: brand.logoFilename
+            }
+
+            expect(body.data, 'Returned car object should be valid').toEqual(expectedBody);
             expect(response.status, "Status code should be 201").toEqual(201);
             expect(body.status).toBe("ok");
         })
