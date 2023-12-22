@@ -1,4 +1,4 @@
-name: Playwright Tests
+name: Playwright tests
 on:
   push:
     branches: [ main ]
@@ -6,7 +6,7 @@ on:
     branches: [ main ]
 jobs:
   playwright:
-    name: 'Playwright API tests'
+    name: 'Playwright tests'
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.39.0-jammy
@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies ⌛
         run: npm ci
 
-      - name: Run e2e and API tests 🎭
+      - name: Run API tests 🎭
         run: npx playwright test --project=api
         env:
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
@@ -33,10 +33,31 @@ jobs:
           AUTHORIZATION_TOKEN: ${{ secrets.AUTHORIZATION_TOKEN }}
           TESTOMATIO: ${{ secrets.TESTOMATIO }}
 
+      - name: Fix permissions
+        if: ${{ always() }}
+        run: |
+          chmod -c -R +rX "_site/" | while read line; do echo "::warning title=Invalid file permission automatically fixed::$line"
+            done
+
       - name: Upload test results 📝
-        if: always()
+        if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
-          name: test-report
+          name: test-results
           path: playwright-report/
           retention-days: 5
+
+  deploy:
+    if: ${{ always() }}
+    needs: [ playwright ]
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/ploy-pages@v3
