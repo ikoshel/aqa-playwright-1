@@ -4,7 +4,7 @@ import {Role} from "./src/data/roles";
 
 async function tearDown() {
     // delete all cars for User role
-    const client: APIClient = await APIClient.authenticate(undefined, getRoleData(Role.User));
+    const client: APIClient = await APIClient.authenticate(getRoleData(Role.User));
     const response = await client.cars.getCurrentUserCars();
     const objCarsID = response.data.data;
 

@@ -9,7 +9,7 @@ import {Role} from "../../../../src/data/roles";
 let client: APIClient;
 let idCar: number;
 test.beforeAll(async () => {
-    client = await APIClient.authenticate(undefined, getRoleData(Role.User));
+    client = await APIClient.authenticate(getRoleData(Role.User));
     const response = await client.cars.createNewCar(carDataAudi);
     idCar = response.data.data.id;
 })
@@ -71,7 +71,7 @@ test.describe("API GET", () => {
     })
     test.describe("Negative tests", () => {
         test('Should not allow retrieval of cars list without proper authorization @smoke @regression', async () => {
-            const clientUnAuth = await APIClient.authenticate(undefined, data.invalidUserData);
+            const clientUnAuth = await APIClient.authenticate(data.invalidUserData);
             const response = await clientUnAuth.cars.getCurrentUserCars();
             expect(response.status, "Status code should be 401").toEqual(401);
             expect(response.data.message, "Error message should be 'Not authenticated'").toEqual("Not authenticated");
